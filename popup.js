@@ -97,12 +97,12 @@ async function init() {
   if (!ok) { await removeStorage(['ppToken', 'ppEmail']); showLogin(); return; }
 
   showMain(ppEmail);
-  await renderCanvasState(ppToken, ppCanvasDomain);
+  await renderCanvasState(ppToken, ppCanvasDomain, true);
 }
 
 // ── Canvas state ───────────────────────────────────────────────────────────
 
-async function renderCanvasState(token, localDomain) {
+async function renderCanvasState(token, localDomain, autoSync = false) {
   // Check backend connection status
   const { ok, data } = await apiFetch('/api/canvas/status', { token });
   const connected = ok && data.connected;
@@ -112,6 +112,8 @@ async function renderCanvasState(token, localDomain) {
     $('canvas-domain-label').textContent = domain;
     $('canvas-connected').style.display = 'block';
     $('canvas-connect-form').style.display = 'none';
+    // Auto-sync silently on popup open so data is always fresh
+    if (autoSync) $('btn-sync').click();
   } else {
     $('canvas-connected').style.display = 'none';
     $('canvas-connect-form').style.display = 'block';
