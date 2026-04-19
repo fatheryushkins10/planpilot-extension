@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Roadmap Canvas Sync",
   "version": "1.0.0",
-  "description": "Sync your Canvas assignments to Roadmap with one click.",
+  "description": "Sync your Canvas LMS assignments directly into Roadmap — your AI-powered planner. One click, always up to date.",
   "action": {
     "default_popup": "popup.html",
     "default_title": "Roadmap Canvas Sync"
