@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "PlanPilot Canvas Sync",
+  "version": "1.0.0",
+  "description": "Sync your Canvas assignments to PlanPilot with one click.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "PlanPilot Canvas Sync"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.instructure.com/*",
+    "https://*.eee.uci.edu/*",
+    "https://planpilot-backend-9tf1.onrender.com/*"
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

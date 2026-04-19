@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlanPilot</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 320px;
+      background: #111;
+      color: #ccc;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 13px;
+    }
+
+    .mono { font-family: 'IBM Plex Mono', 'Courier New', monospace; }
+
+    .header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title { font-size: 14px; font-weight: 600; color: #eee; font-family: monospace; }
+    .header-sub { font-size: 10px; color: #444; margin-top: 2px; }
+
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block; margin-right: 6px;
+    }
+    .dot-green { background: #5a9; }
+    .dot-red { background: #b55; }
+    .dot-yellow { background: #e8a030; }
+
+    .section { padding: 14px 18px; border-bottom: 1px solid #1a1a1a; }
+    .section:last-child { border-bottom: none; }
+
+    .label {
+      font-size: 10px; color: #444; font-family: monospace;
+      letter-spacing: 0.05em; margin-bottom: 6px; display: block;
+    }
+
+    input {
+      width: 100%; padding: 8px 10px;
+      background: #1a1a1a; border: 1px solid #222;
+      border-radius: 5px; color: #ccc; font-size: 12px;
+      font-family: monospace; outline: none;
+      margin-bottom: 6px;
+    }
+    input:focus { border-color: #333; }
+    input::placeholder { color: #333; }
+
+    button {
+      width: 100%; padding: 9px;
+      border: none; border-radius: 5px;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: monospace;
+      transition: opacity 0.15s;
+    }
+    button:disabled { opacity: 0.4; cursor: default; }
+
+    .btn-primary { background: #5a9; color: #111; }
+    .btn-secondary { background: #1a1a1a; border: 1px solid #222; color: #666; }
+    .btn-danger { background: transparent; border: 1px solid #222; color: #b55; }
+    .btn-blue { background: #4285f4; color: #fff; }
+
+    .msg {
+      font-size: 11px; margin-top: 8px; line-height: 1.5;
+      padding: 6px 10px; border-radius: 5px;
+    }
+    .msg-error { color: #b55; background: #b5510a; }
+    .msg-success { color: #5a9; background: #5a9015; }
+    .msg-info { color: #888; background: #1a1a1a; }
+
+    .connected-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; background: #1a1a1a; border-radius: 6px;
+      border: 1px solid #222; margin-bottom: 10px;
+    }
+    .connected-label { font-size: 11px; color: #5a9; font-family: monospace; font-weight: 600; }
+    .connected-sub { font-size: 10px; color: #444; margin-top: 2px; }
+
+    .link {
+      font-size: 10px; color: #5a9; text-decoration: none;
+      display: block; margin-top: 6px;
+    }
+
+    #view-login, #view-main { display: none; }
+
+    .result-row {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: #555; font-family: monospace;
+      margin-top: 4px;
+    }
+    .result-row span { color: #5a9; }
+  </style>
+</head>
+<body>
+
+  <!-- Login View -->
+  <div id="view-login">
+    <div class="header">
+      <div>
+        <div class="header-title mono">planpilot</div>
+        <div class="header-sub">Canvas Sync Extension</div>
+      </div>
+    </div>
+    <div class="section">
+      <label class="label">PLANPILOT EMAIL</label>
+      <input type="email" id="login-email" placeholder="you@example.com" />
+      <label class="label">PASSWORD</label>
+      <input type="password" id="login-password" placeholder="••••••••" />
+      <button class="btn-primary" id="btn-login">Sign In</button>
+      <div id="login-msg"></div>
+    </div>
+  </div>
+
+  <!-- Main View -->
+  <div id="view-main">
+    <div class="header">
+      <div>
+        <div class="header-title mono">planpilot</div>
+        <div class="header-sub" id="header-email"></div>
+      </div>
+      <button class="btn-danger" id="btn-logout" style="width:auto;padding:4px 10px;font-size:11px;">Sign out</button>
+    </div>
+
+    <!-- Canvas Section -->
+    <div class="section">
+      <div style="font-size:12px;font-weight:600;color:#aaa;margin-bottom:10px;font-family:monospace;">Canvas LMS</div>
+
+      <div id="canvas-connected" style="display:none">
+        <div class="connected-row">
+          <div>
+            <div class="connected-label"><span class="status-dot dot-green"></span>Connected</div>
+            <div class="connected-sub" id="canvas-domain-label"></div>
+          </div>
+          <button class="btn-danger" id="btn-canvas-disconnect" style="width:auto;padding:4px 10px;font-size:11px;">Disconnect</button>
+        </div>
+        <button class="btn-primary" id="btn-sync">Sync Assignments →</button>
+        <div id="sync-result" style="display:none" class="result-row">
+          <span id="sync-created">0</span> new &nbsp;·&nbsp;
+          <span id="sync-updated">0</span> updated &nbsp;·&nbsp;
+          <span id="sync-skipped">0</span> skipped
+        </div>
+        <div id="canvas-msg"></div>
+      </div>
+
+      <div id="canvas-connect-form">
+        <label class="label">CANVAS DOMAIN</label>
+        <input type="text" id="canvas-domain" placeholder="canvas.eee.uci.edu" />
+        <label class="label">ACCESS TOKEN</label>
+        <input type="password" id="canvas-token" placeholder="Paste your Canvas API token" />
+        <button class="btn-primary" id="btn-canvas-connect">Connect Canvas</button>
+        <a id="canvas-settings-link" class="link" target="_blank" style="display:none">↗ Open Canvas Settings to generate a token</a>
+        <div id="canvas-connect-msg"></div>
+      </div>
+    </div>
+
+    <!-- Open App -->
+    <div class="section" style="padding:10px 18px;">
+      <a href="https://planpilot-frontend-seven.vercel.app" target="_blank">
+        <button class="btn-secondary" style="font-size:11px;">Open PlanPilot ↗</button>
+      </a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
