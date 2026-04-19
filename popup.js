@@ -59,6 +59,19 @@ async function canvasFetch(domain, token, path) {
   return data;
 }
 
+// ── Tab toggle ─────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  const isSignin = tab === 'signin';
+  $('form-signin').style.display = isSignin ? 'block' : 'none';
+  $('form-signup').style.display = isSignin ? 'none' : 'block';
+  $('tab-signin').style.color = isSignin ? '#5a9' : '#444';
+  $('tab-signin').style.borderBottomColor = isSignin ? '#5a9' : 'transparent';
+  $('tab-signup').style.color = isSignin ? '#444' : '#5a9';
+  $('tab-signup').style.borderBottomColor = isSignin ? 'transparent' : '#5a9';
+}
+window.switchTab = switchTab;
+
 // ── Views ──────────────────────────────────────────────────────────────────
 
 function showLogin() {
@@ -136,6 +149,40 @@ $('btn-login').addEventListener('click', async () => {
     showMsg(msgEl, 'No token returned. Check backend version.', 'error');
     return;
   }
+
+  await setStorage({ ppToken: accessToken, ppEmail: email });
+  showMain(email);
+  await renderCanvasState(accessToken, null);
+});
+
+// ── Sign up ────────────────────────────────────────────────────────────────
+
+$('btn-signup').addEventListener('click', async () => {
+  const name = $('signup-name').value.trim();
+  const email = $('signup-email').value.trim();
+  const password = $('signup-password').value;
+  const msgEl = $('signup-msg');
+
+  if (!email || !password) { showMsg(msgEl, 'Email and password are required.', 'error'); return; }
+  if (password.length < 8) { showMsg(msgEl, 'Password must be at least 8 characters.', 'error'); return; }
+
+  $('btn-signup').disabled = true;
+  clearMsg(msgEl);
+
+  const { ok, data } = await apiFetch('/api/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ email, password, name }),
+  });
+
+  $('btn-signup').disabled = false;
+
+  if (!ok) {
+    showMsg(msgEl, data.error || 'Registration failed.', 'error');
+    return;
+  }
+
+  const accessToken = data.accessToken;
+  if (!accessToken) { showMsg(msgEl, 'Registered but no token returned.', 'error'); return; }
 
   await setStorage({ ppToken: accessToken, ppEmail: email });
   showMain(email);

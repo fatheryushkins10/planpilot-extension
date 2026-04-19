@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "PlanPilot Canvas Sync",
+  "name": "Roadmap Canvas Sync",
   "version": "1.0.0",
-  "description": "Sync your Canvas assignments to PlanPilot with one click.",
+  "description": "Sync your Canvas assignments to Roadmap with one click.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "PlanPilot Canvas Sync"
+    "default_title": "Roadmap Canvas Sync"
   },
   "permissions": [
     "storage"

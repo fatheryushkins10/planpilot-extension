@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PlanPilot</title>
+  <title>Roadmap</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -101,21 +101,47 @@
 </head>
 <body>
 
-  <!-- Login View -->
+  <!-- Login / Signup View -->
   <div id="view-login">
     <div class="header">
       <div>
-        <div class="header-title mono">planpilot</div>
+        <div class="header-title mono">roadmap</div>
         <div class="header-sub">Canvas Sync Extension</div>
       </div>
     </div>
-    <div class="section">
-      <label class="label">PLANPILOT EMAIL</label>
+
+    <!-- Tab toggle -->
+    <div style="display:flex;border-bottom:1px solid #1a1a1a;">
+      <button id="tab-signin" onclick="switchTab('signin')"
+        style="flex:1;padding:10px;background:transparent;border:none;border-bottom:2px solid #5a9;color:#5a9;font-family:monospace;font-size:12px;font-weight:700;cursor:pointer;">
+        Sign In
+      </button>
+      <button id="tab-signup" onclick="switchTab('signup')"
+        style="flex:1;padding:10px;background:transparent;border:none;border-bottom:2px solid transparent;color:#444;font-family:monospace;font-size:12px;font-weight:700;cursor:pointer;">
+        Create Account
+      </button>
+    </div>
+
+    <!-- Sign In Form -->
+    <div id="form-signin" class="section">
+      <label class="label">EMAIL</label>
       <input type="email" id="login-email" placeholder="you@example.com" />
       <label class="label">PASSWORD</label>
       <input type="password" id="login-password" placeholder="••••••••" />
       <button class="btn-primary" id="btn-login">Sign In</button>
       <div id="login-msg"></div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="form-signup" class="section" style="display:none;">
+      <label class="label">NAME</label>
+      <input type="text" id="signup-name" placeholder="Your name" />
+      <label class="label">EMAIL</label>
+      <input type="email" id="signup-email" placeholder="you@example.com" />
+      <label class="label">PASSWORD</label>
+      <input type="password" id="signup-password" placeholder="Min. 8 characters" />
+      <button class="btn-primary" id="btn-signup">Create Account</button>
+      <div id="signup-msg"></div>
     </div>
   </div>
 
@@ -123,7 +149,7 @@
   <div id="view-main">
     <div class="header">
       <div>
-        <div class="header-title mono">planpilot</div>
+        <div class="header-title mono">roadmap</div>
         <div class="header-sub" id="header-email"></div>
       </div>
       <button class="btn-danger" id="btn-logout" style="width:auto;padding:4px 10px;font-size:11px;">Sign out</button>
@@ -163,8 +189,8 @@
 
     <!-- Open App -->
     <div class="section" style="padding:10px 18px;">
-      <a href="https://planpilot-frontend-seven.vercel.app" target="_blank">
-        <button class="btn-secondary" style="font-size:11px;">Open PlanPilot ↗</button>
+      <a href="https://roadmap-frontend-seven.vercel.app" target="_blank">
+        <button class="btn-secondary" style="font-size:11px;">Open Roadmap ↗</button>
       </a>
     </div>
   </div>
